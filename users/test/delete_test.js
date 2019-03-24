@@ -1,7 +1,7 @@
 const assert = require('assert');
 const User = require('../src/user');
 
-describe('Deleting a user', (done) => {
+describe('Deleting a user', () => {
     let joe;
 
     beforeEach( (done) => {
@@ -27,8 +27,8 @@ describe('Deleting a user', (done) => {
             done();
         })
     });
-    it ('class method findAndRemove', (done) => {
-        User.findOneAndRemove( { name : 'Joe'})
+    it ('class method findAndDelete', (done) => {
+        User.findOneAndDelete( { name : 'Joe'})
         .then( () => User.findOne( { name: 'Joe'} ))
         .then( (user) => {
             assert(user === null);
@@ -36,7 +36,7 @@ describe('Deleting a user', (done) => {
         })
     });
     it ('class method findByIdAndRemove', (done) => {
-        User.findByIdAndRemove( joe._id )
+        User.findByIdAndDelete( joe._id )
         .then( () => User.findOne( { name: 'Joe'} ))
         .then( (user) => {
             assert(user === null);

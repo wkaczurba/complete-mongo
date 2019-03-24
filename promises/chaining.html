@@ -1,0 +1,38 @@
+<head>
+</head>
+
+<script>
+    const delay = (ms) => new Promise(
+        (resolve) => { setTimeout( () => resolve('Done in ' + ms + ' miliseconds'), ms); }
+    );
+
+
+    delay(500)
+        .then( (s) => {
+            console.log(s)
+            return delay(300);
+        })
+        .then( (s) => {
+            console.log(s)
+            return delay(200);
+        })
+        .then( (s) => {
+            console.log(s)
+            return delay(100);
+        })
+        .then( (s) => {
+            if (Math.random() > 0.5) {
+                throw new Error('error123')
+            } else {
+                return delay(50);
+            }
+        })
+        .then( (s) => {
+            console.log('Last call: ' + s +'. All done!');
+        })
+        .catch( (s) => {
+            console.error('Got an error: ' + s);
+        })
+        
+
+</script>

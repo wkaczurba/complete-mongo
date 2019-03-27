@@ -10,15 +10,9 @@ const Artist = require('../models/artist');
  */
 module.exports = (criteria, sortProperty, offset = 0, limit = 20) => {
 
-    // Non-ES6 approach:
-    //let sortArray = {};
-    //sortArray[sortProperty] = 1;
-
-    //ES6 approach
-    let sortArray = { [sortProperty] : 1 };
-
-    const query = Artist.find()
-         .sort(sortArray)
+    console.log(criteria);
+    const query = Artist.find(buildCriteria(criteria))
+         .sort({ [sortProperty] : 1 })
          .skip(offset)
          .limit(limit);
 
@@ -33,3 +27,25 @@ module.exports = (criteria, sortProperty, offset = 0, limit = 20) => {
             });
 };
 
+const buildCriteria = (criteria) => {
+    console.log(criteria);
+    let query = {};
+    if (criteria.age) {
+         query.age = { $gte: criteria.age.min, $lte: criteria.age.max };
+    }
+    if (criteria.yearsActive) {
+        query.yearsActive = { $gte: criteria.yearsActive.min, $lte: criteria.yearsActive.max };
+    }
+    // This will work if no text index is defined:
+    // if (criteria.name) {
+    //     query.name = { $regex: criteria.name, $options: 'i' };
+    // }
+    
+    // This is when text index is in place:
+    if (criteria.name) {
+        query.$text = { $search: criteria.name }
+    }
+
+    console.log(query);
+    return query;
+}

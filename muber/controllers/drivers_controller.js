@@ -4,7 +4,7 @@ module.exports = {
     greeting(req, res) {
         res.send({ hi: 'there'});
     },
-    create(req, res) {
+    create(req, res, next) {
         console.log(req.body); // body will be parsed by bodyParser
 
         const driverProps = req.body;
@@ -12,5 +12,6 @@ module.exports = {
         // Save to the database:
         Driver.create(driverProps)
             .then(driver => res.send(driver))
+            .catch(next)
     }
 };

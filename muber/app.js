@@ -12,5 +12,11 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(bodyParser.json());
 routes(app);
+app.use( (err, req, res, next) => {
+    // THis outputs: 'error: ValidationError: email: Path `email` is required.':
+    //console.log('error: ' + err); 
+
+    res.status(422).send({ error: err.message })
+})
 
 module.exports = app;

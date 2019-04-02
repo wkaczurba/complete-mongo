@@ -4,6 +4,34 @@ module.exports = {
     greeting(req, res) {
         res.send({ hi: 'there'});
     },
+    index(req, res, next) {
+        console.log(req.query);
+        const { lng, lat } = req.query;
+
+        // Driver.geoNear( {type: 'Point', coordinates: [parseFloat(lng), parseFloat(lat)]},
+        //     {spherical: true, maxDistance: 200000 }
+        // )
+        //     .then(drivers => res.send(drivers))
+        //     .catch(next)
+
+        Driver.aggregate([
+            {
+                $geoNear: { 
+                    near: {type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)]},
+                    spherical: true, 
+                    distanceField: "dist.calculated",
+                    maxDistance: 200000 }
+            }
+        ], function(err, result) {
+            if (err) { 
+                next(err)
+            } else {
+                //console.log(result);
+                //res.json(result);
+                res.send(result)
+            }
+        });
+    },
     create(req, res, next) {
         console.log(req.body); // body will be parsed by bodyParser
 
